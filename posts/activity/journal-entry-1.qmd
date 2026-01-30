@@ -5,20 +5,10 @@ categories: [research-idea, planning]
 description: "What is your research idea?"
 ---
 
-![Research planning](../thumbnail.jpg)
+![Research planning](../AI_Error.jpeg)
 
 ## What is your research idea?
 
-In this first journal entry, describe the problem you plan to investigate and
-your initial approach. Please answer the following questions:
+I want to investigate the problem of getting errors when using LLMs and coding agents. There have been many times when I’ve gotten frustrated over errors popping up when using a coding agent. For example, it tries to reference a method that doesn’t exist. My idea for solving this problem is to take the LLM output and mutate it to purposefully induce errors. This output will then be given to the coding agent, and if an error is present, you will then know what mutation caused the error, allowing you to adjust the coding agent to account for the possible error. I hope to create a solution that will catch possible errors as a preventive measure rather than fixing the problem only after getting an error.
 
-- What is the main problem or question you want to address?
-- Why is this problem important or interesting?
-- What is your initial approach to solving this problem?
-- What tools, technologies, or methods do you plan to use?
-- What do you hope to achieve or discover?
-- What is one published research paper in your area?
-
-Remember to be specific and provide concrete examples where possible. This entry
-will serve as a foundation for your research project, so take time to think
-through your ideas carefully and to document this in this journal entry.
+A paper related to LLM agents failing is Kunlun Zhu, et al. "Where LLM Agents Fail and How They Can Learn From Failures." (2025) https://arxiv.org/pdf/2509.25370
