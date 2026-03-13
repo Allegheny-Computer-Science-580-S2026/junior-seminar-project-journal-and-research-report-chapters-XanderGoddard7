@@ -1,6 +1,9 @@
 # Introduction
 
-LLM agents, such as coding agents, have shown great promise in various applications, but their robustness and reliability remain a concern. These agents can fail in unexpected ways, which can lead to negative consequences in real-world applications. Therefore, it's crucial to develop methods for evaluating the robustness of coding agents and identifying their weaknesses. This project proposes a new method for evaluating the robustness of coding agents through code mutation. This method involves introducing controlled mutations to the code that the agent is working with and observing how the agent responds to these mutations. By analyzing the agent's behavior in response to these mutations, we can identify weaknesses and improve the reliability of these agents. This method can provide a systematic way to evaluate coding agents and help guide future improvements in their design.
+LLM agents, such as coding agents, have shown great promise in various applications, but their robustness and reliability 
+remain a concern. These agents can fail in unexpected ways, which can lead to negative consequences in real-world 
+applications. Therefore, it's crucial to develop methods for evaluating the robustness of coding agents and identifying   
+their weaknesses. This project proposes a new method for evaluating the robustness of coding agents through code mutation. This method involves introducing controlled mutations to the code that the agent is working with and observing how the agent responds to these mutations. By analyzing the agent's behavior in response to these mutations, we can identify weaknesses and improve the reliability of these agents. This method can provide a systematic way to evaluate coding agents and help guide future improvements in their design.
 
 ## Motivation
 
