@@ -1,47 +1,49 @@
 # Introduction
 
-This chapter describes your completed junior seminar research project,
-including the overall aims and the background motivating your research.
-Whenever possible, you should use one or more concrete examples and
-technical diagrams.
-
-**Note for Junior Seminar**: This chapter should be approximately 5-7
-pages in length. Focus on clearly articulating your research problem,
-your approach, and why it matters. You don't need to provide exhaustive
-detail - prioritize clarity and coherence over comprehensiveness.
-
-It is often useful and necessary to separate the introduction into
-multiple sections. Several possible sections are proposed below, you
-can use these or distribute your introductory text into sections in
-another way.
-
-The headings below propose _one way_ you might structure this section
-of the document.
+LLM agents, such as coding agents, have shown great promise in various applications, but their robustness and reliability remain a concern. These agents can fail in unexpected ways, which can lead to negative consequences in real-world applications. Therefore, it's crucial to develop methods for evaluating the robustness of coding agents and identifying their weaknesses. This project proposes a new method for evaluating the robustness of coding agents through code mutation. This method involves introducing controlled mutations to the code that the agent is working with and observing how the agent responds to these mutations. By analyzing the agent's behavior in response to these mutations, we can identify weaknesses and improve the reliability of these agents. This method can provide a systematic way to evaluate coding agents and help guide future improvements in their design.
 
 ## Motivation
 
-## Current State of the Art
+Work on AI agents is growing rapidly, but there are still many open questions about how to evaluate their robustness and reliability. So that showcases a need for testing coding agent robustness. So this method aims to address this need. With the goal of improving the reliability and reducing the weakness of these agents. 
 
-## Goals of the Project
+Using code mutation to test the robustness of coding agents can help identify weaknesses and improve the reliability of these agents. By introducing controlled mutations to the code that the agent is working with, we can observe how the agent responds to these mutations and identify areas where the agent may struggle or fail. This can help guide future improvements in the design of coding agents and contribute to the overall advancement of the field.
+
+Working on LLMs and coding agents and seeing how they can fail in unexpected ways, shows just how important it is to find better ways to evaluate and improve their performance. By developing a method for evaluating the robustness of coding agents through code mutation, we can help ensure that these agents are more reliable and effective in real-world applications. This can have a positive impact on the safety and effectiveness of AI systems that rely on these agents, and can also help reduce the time and resources spent on debugging and improving these agents.
+
+This project is important because as AI agents become more integrated into various applications, ensuring their robustness and reliability is crucial for safety and effectiveness. By identifying weaknesses in coding agents, we can help prevent potential failures that could lead to negative consequences in real-world applications, such as software bugs or security vulnerabilities. Additionally, improving the robustness of coding agents can lead to more efficient and effective AI systems, which can have a positive impact on various industries and applications. Therefore, developing a method for evaluating the robustness of coding agents through code mutation is an important step towards ensuring the safety and effectiveness of AI systems that rely on these agents.
+
+This method can provide a systematic way to evaluate coding agents and help guide future improvements in their design. Having a systematic way to evaluate coding agents can help researchers and practitioners identify weaknesses and improve the reliability of these agents. By providing a structured approach to evaluating coding agents, this method can help ensure that improvements are targeted towards areas where the agent may struggle or fail, which can lead to more effective and efficient improvements.
+
+Also, this method can help establish benchmarks and standards for evaluating the performance of coding agents, which can be beneficial for both researchers and practitioners in the field. By improving the robustness of coding agents, we can also help reduce the time and resources spent on debugging and improving these agents, which can have a positive impact on the efficiency of AI development.
+
+## Broader Impact and social implications
+
+The method I'm proposing can help improve the robustness of coding agents, which can have a positive impact on the reliability and safety of AI systems that rely on these agents. By identifying weaknesses in coding agents, we can help prevent potential failures that could lead to negative consequences in real-world applications, such as software bugs or security vulnerabilities. 
+
+When increasing the robustness of coding agents, it can also increase the reliance on these agents, which can have both positive and negative implications. On one hand, it can lead to more efficient and effective AI systems, but on the other hand, it can also lead to over-reliance on these agents and potential issues if they fail in unexpected ways. Therefore, it's important to strike a balance between improving robustness and ensuring that we don't become overly dependent on these agents. 
+
+There is also a potential for misuse if the method is used to intentionally create more robust malicious agents, so it's important to consider ethical implications and ensure that the method is used responsibly. As with any technology, there is a potential for people to misuse it, so it's important to ensure that the method is used in a controlled and responsible manner, with appropriate testing and safeguards in place to prevent negative consequences.
+
+By increasing the robustness of coding agents, also helps reduce the time and resources spent on debugging and improving these agents, which can have a positive impact on the efficiency of AI development. This can lead to faster development of AI systems and potentially more innovative applications of AI. However, it's important to ensure that the benefits of this method are accessible to a wide range of researchers and practitioners, and that it doesn't contribute to further disparities in access to AI technology. Therefore, it's important to consider issues of accessibility and equity when developing and promoting this method.
+
 
 ## Ethical Implications
 
-This document requires that you discuss the ethical implications of your
-work -- no matter how benign you consider the outcome of your project.
-As several major studies of ethical issues in computer science assert:
-_no project is completely value-neutral_.
+Could cause over-reliance on coding agents, which could lead to issues if they fail in unexpected ways as it becomes more difficult to understand what they are doing. It's important to ensure that we don't become overly dependent on these agents and that we have backup plans in place in case of failures. Not just relying on the agents but also having human oversight and intervention when necessary can help mitigate this risk. Additionally, it's important to ensure that the agents are designed in a way that allows for transparency and interpretability, so that we can understand how they are making decisions and identify potential issues before they lead to failures.
 
-To assist you in elaborating on these issues, the following areas are
-topics you might consider addressing. You do not need to address all of
-them.
+There is also a potential for misuse if this method is used to intentionally create more robust malicious agents. It's important to consider ethical implications and ensure that the method is used responsibly, with appropriate safeguards in place to prevent misuse. Possibly through limiting access to the method and/or providing guidelines for responsible use.
 
-* Information Privacy
-* Information Accuracy (e.g. can contain reliability)
-* Potential Misuse (e.g. computer crime, unintended consequences)
-* Second- or Third-Party Risk (e.g. safety)
-* Data Collection Issues (e.g. issues inherent in collecting data)
-* Algorithmic or Data Bias
-* Potential Power Difference / Social Imbalance / Issues in Equity
+Another risk involves purposefully introducing mutations to code could lead to unintended consequences if not done carefully, such as introducing security vulnerabilities or causing the code to behave in unexpected ways. Therefore, it's important to ensure that the mutations are done in a controlled and responsible manner, with appropriate testing and safeguards in place to prevent negative consequences. 
 
-In addition, reflect on ways that the above harms can be or are
-mitigated by your work.
+The method could also have implications for the job market, as improving the robustness of coding agents could potentially lead to increased automation and job displacement in certain industries. It's important to consider these implications and work towards solutions that can help mitigate negative impacts on workers and society as a whole. 
+
+
+## Important Contributions
+
+Propose a new method for evaluating the robustness of coding agents through code mutation, which can help identify weaknesses and improve the reliability of these agents. As well as providing a systematic way to evaluate coding agents and help guide future improvements in their design. A method that can also help establish benchmarks and standards for evaluating the performance of coding agents. Also reducing the time and resources spent on debugging and improving these agents, which can have a positive impact on the efficiency of AI development.
+
+Another contribution is to provide a practical contribution by developing a tool or framework that can be used by other researchers and practitioners to evaluate the robustness of their own coding agents using this method. A full implementation of the method, along with documentation and examples, can help make this method more accessible and useful for others in the field. This can also help encourage adoption of the method and contribute to the overall advancement of the field.
+
+This method sholud also jumpstart a new line of research in the field of AI agent evaluation, which examines how LLM agents can go arry and how to mitigate those failures. This can lead to further research on improving the robustness of coding agents and developing new methods for evaluating their performance. Make a paper contribution by applying this method to evaluate the robustness of existing coding agents and providing insights into their strengths and weaknesses. This can help guide future improvements in the design of coding agents and contribute to the overall advancement of the field. 
+
+By providing a systematic way to evaluate coding agents, this method can also help establish benchmarks and standards for evaluating the performance of these agents, which can be beneficial for both researchers and practitioners in the field. 
