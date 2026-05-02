@@ -1,27 +1,177 @@
 # Method of approach
 
-This chapter answers the "how" question - how did you complete your
-project, including the overall design of your study, details of the
-algorithms and tools you have used, etc. Use technical diagrams,
-equations, algorithms, and paragraphs of text to describe the research
-that you have completed. Be sure to number all figures and tables and to
-explicitly refer to them in your text.
+## Overview
 
-**Note for Junior Seminar**: This chapter should be approximately 5-7
-pages in length. Focus on the most important aspects of your
-implementation. Include at least one technical diagram showing your
-system architecture or workflow. Provide enough detail that someone could
-understand and potentially replicate your work.
+This project implements an LLM-centered mutation evaluation harness (the
+"LLM-Mutator") that measures how coding agents respond to graded source
+code mutations. The core idea is simple: produce a clean baseline script,
+create one or more mutated forks of that script, and run parallel agent
+workflows to measure whether the agents detect, repair, or otherwise
+compensate for mutations. The implementation draws on established
+techniques from code representation [@alon2019code2vec], pre-trained
+code models [@feng2020codebert], automated testing for ML systems
+[@pei2017deepxplore], and mutation-testing analysis [@wong1998theoretical;
+@debroy2010using].
 
-This chapter should contain:
+Figure 1 shows the high-level mutation-fork pipeline used throughout the
+experiments. The original `script.py` is forked into a mutated and an
+original branch. Each branch is executed in an isolated agent context; the
+agent may attempt repairs or adjustments before producing a final script
+that is compared for functional equivalence and behavior consistency.
 
-* Description of your development environment and tools
-* Key algorithms or data structures you implemented
-* System architecture or design decisions
-* Code snippets or pseudocode for critical components
-* Technical diagrams illustrating your approach
+![](images/mutation_pipeline.svg){fig-alt="Mutation fork pipeline"}
 
-For those projects whose implications address social or moral issues
-(i.e. ethical standards, causes, effects), you will want to use this
-section to describe how you actively mitigated or considered these
-issues.
+Figure 1: LLM-Mutator mutation-fork evaluation pipeline. The pipeline
+creates a mutated fork, runs two agent workflows in parallel, and
+compares final outputs for behavioral and functional differences.
+
+## Development environment and tools
+
+- Implementation: Python 3.10+ (project includes a `pyproject.toml` and
+	`requirements.txt` under the LLM-Mutator workspace). The reference
+	implementation used a local virtual environment with packages listed in
+	`requirements.txt` in the attached `Coding Agent MRT` folder.
+- LLMs / Agents: experiments used off-the-shelf GPT-style models (via a
+	local adapter or API) and smaller, reproducible code models for rapid
+	iteration (CodeBERT-style encoders for representation experiments).
+- Testing harness: pytest for unit checks and a custom runner to execute
+	forks in isolated sandboxes.
+- Versioning & reproducibility: each fork is saved with deterministic
+	metadata (seed, mutation operator, timestamp) enabling reproducible
+	experiments.
+
+## OPENCODE subagent workflow (Coding Agent MRT)
+
+In this repository OPENCODE is implemented as a local subagent living in
+the `.opencode/` directory (see `opencode.json`, `package.json`, and the
+`agents/` folder). The OPENCODE component in this project exposes a
+file-driven / CLI-oriented interface rather than a remote RPC
+service. Mutation requests are expressed as small JSON manifests or CLI
+invocations; OPENCODE applies AST-aware edits and writes mutated
+artifacts plus a signed manifest under `.opencode/agents/<run-id>/`.
+
+Key implementation details that match the repo layout attached:
+
+- OPENCODE artifacts: `.opencode/opencode.json`, `.opencode/package.json`,
+  and `.opencode/agents/` contain the subagent configuration and produced
+  mutation artifacts.
+- Mutation testing and test evaluation use the Python toolchain in the
+  repository: `pytest` drives the test-suite (`tests/test_numerical_integration.py`)
+  and `mutmut` is available for additional mutation analysis (cache in
+  `.mutmut-cache`).
+- The driver harness runs OPENCODE via its CLI or by writing a request
+  manifest that OPENCODE watches; mutated files are produced in-place in
+  a quarantined copy of `src/` and the test-suite is executed with
+  `pytest` to determine regressions.
+
+The experimental flow is therefore:
+
+1. The driver writes a mutation request (or invokes the OPENCODE CLI)
+	containing the target path in `src/`, selected operator id, and a
+	deterministic seed.
+2. OPENCODE produces a quarantined mutated copy under
+	`.opencode/agents/<run-id>/` and writes a manifest describing the
+	operator, file location, and provenance (timestamp, seed, toolchain).
+3. The harness runs `pytest` against the mutated copy to determine
+	regressions. Optionally `mutmut` is used for fine-grained mutation
+	coverage analysis and to cache mutation artifacts in `.mutmut-cache`.
+4. Two agent contexts are created for evaluation: a clean-control agent
+	and a repair agent instantiated from the `AGENTS.md` / agent factory.
+	The repair agent receives the mutated copy and attempts iterative
+	repairs; each candidate patch is validated by re-running the test
+	suite in the quarantined environment.
+
+This file-based, CLI-driven approach matches the repository structure in
+the attached `Coding Agent MRT` folder and ensures reproducible runs by
+preserving manifests and mutated artifacts under `.opencode/agents/`.
+
+## Mutation operators and severity levels
+
+Mutations are organized by semantic severity to exercise different
+failure modes. Examples implemented in the Coding Agent MRT include:
+
+- Structural removals: delete an entire function or method (major).
+- Control-flow changes: flip conditional predicates (major).
+- Type or API perturbations: replace an API call with a different but
+	syntactically valid call (moderate).
+- Cosmetic/no-op mutations: rename local variables, re-order imports,
+	or insert dead code (minor) [@papadakis2019analysis].
+
+Each mutation is applied deterministically using a scripted operator so
+that experiments are repeatable. The severity levels are designed to create a gradient of difficulty for the agent, with the expectation that more severe mutations will be harder to detect and repair.
+
+## System architecture and workflow
+
+The system is logically divided into three components: (1) the
+Mutation Engine, (2) the Agent Runner, and (3) the Comparator and
+Metrics Collector.
+
+- Mutation Engine: accepts a clean script and applies the chosen
+	operator(s), producing a mutated script plus metadata (operator id,
+	location, severity). The engine reuses AST-based transformations for
+	language-aware edits so that mutated files remain syntactically valid
+	where intended.
+- Agent Runner: spawns an isolated execution context for an agent and
+	provides the script plus any test harness. The agent is directed to
+	run, detect issues, and optionally propose a patch; both the agent's
+	intermediate logs and the final repaired script are captured.
+- Comparator & Metrics Collector: runs the same test-suite or
+	specification on agent outputs and computes functional equivalence.
+
+### OPENCODE integration details (repo-specific)
+
+Because OPENCODE in this project is implemented as a local subagent,
+the driver interacts with it via CLI or filesystem manifests. Typical
+driver actions are:
+
+- `write_request(manifest) -> .opencode/requests/<id>.json` (file to be
+	picked up by OPENCODE) or `npm run mutate -- <manifest.json>` when
+	invoking the Node-based subagent directly.
+- OPENCODE produces `.opencode/agents/<id>/mutated/` and
+	`.opencode/agents/<id>/manifest.json` which the harness reads to
+	continue evaluation.
+
+Storing mutated artifacts under `.opencode/agents/` and using
+`pytest`/`mutmut` for evaluation ensures exact provenance and enables
+replayable experiments across different agent models defined in
+`AGENTS.md`.
+
+## Data, tests, and evaluation metrics
+
+Test inputs are small, deterministic examples designed to exercise the
+script's primary functionality. Evaluation metrics include:
+
+
+- Detection rate: whether the agent explicitly identifies mutation and
+	characterizes its effect.
+- Time-to-repair (to measure work needed
+	for recovery).
+
+These metrics follow conventions from mutation-testing literature and
+automated testing for ML systems [@wong1998theoretical; @debroy2010using;
+@pei2017deepxplore].
+
+## Reproducibility and implementation notes
+
+- The `Coding Agent MRT` workspace included with the project contains a
+	lightweight runner and unit tests (see `tests/test_numerical_integration.py`
+	as an example of the test pattern used).
+
+## Ethics and safety considerations
+
+Applying mutations to code may surface vulnerabilities or generate
+dangerous behavior in automated systems. To mitigate risk, the
+experiments are constrained to small, deterministic toy programs or
+isolated components (no production or safety-critical systems). The
+project documents responsible use, and experimental artifacts are
+released with disclaimers and guidance for ethical research.
+
+## Summary
+
+This Methods chapter described the LLM-Mutator pipeline, the
+implemented mutation operators, the agent-runner architecture, and the
+metrics used to quantify agent robustness. The following chapters report
+results using this harness and analyze failure modes that emerge across
+mutation severities.
+
+

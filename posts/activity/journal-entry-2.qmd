@@ -1,37 +1,54 @@
 ---
-title: "Journal Entry 2: Prototype Installation and Use"
-date: "2026-02-01"
-categories: [prototype, documentation]
-description: "How do you install and use your research prototype?"
+title: "Journal Entry 2 — Coding Agent MRT progress"
+date: 2026-05-01
+categories: [activity, research]
 ---
 
-![Research prototype](../thumbnail.jpg)
+Today I explored the Coding Agent MRT repository to ground the Methods
+chapter in the actual implementation and to verify how OPENCODE and the
+evaluation harness are arranged.
 
-## How do you install and use your research prototype?
+Key observations:
 
-In this journal entry, provide clear documentation for your research prototype.
-Your goal is to make it easy for someone else to install and use your work.
+- OPENCODE is implemented locally under the `.opencode/` directory. The
+  subagent is file-driven and configured via `opencode.json`/`package.json`.
+- The project uses the standard Python test toolchain. `pytest` runs the
+  canonical test-suite in `tests/test_numerical_integration.py`, and
+  `mutmut` is available (cache in `.mutmut-cache`) for additional
+  mutation analysis.
+- The target code used for experiments lives in `src/`, with
+  `src/numerical_integration_orig.py` as a representative example. The
+  test harness exercises numerical-integration behavior, which the
+  mutation engine uses to surface regressions.
+- `opencode.json` documents the available agent entry points and factories
+  used by the evaluation harness; agent instances are created by the
+  driver to run control and repair experiments.
 
-### Installation Instructions
+What I changed in the report today:
 
-- What are the system requirements?
-- What dependencies need to be installed?
-- What are the step-by-step installation instructions?
-- How can someone verify that the installation was successful?
+- Updated the Methods chapter to match the repo: the OPENCODE subagent
+  is CLI/file-driven and produces quarantined mutated copies plus
+  manifests. The evaluation loop runs `pytest` against mutated copies
+  and uses the repair-agent loop to attempt fixes.
 
-### Usage Instructions
+Why this matters:
 
-- How do you run your prototype?
-- What are the main features or capabilities?
-- What are some example use cases?
-- Are there any configuration options or settings?
+- The filesystem/CLI approach in `.opencode/` makes experiments
+  reproducible and auditable — every mutation has a manifest and a
+  run folder. It also simplifies integration with `pytest` and with
+  existing Python-based tooling for automated test validation.
 
-### Technical Details
+Next steps I plan to take:
 
-- What technologies or frameworks did you use?
-- Why did you choose these particular tools?
-- What are the key components or modules?
-- How do the different parts work together?
+- Run a short end-to-end experiment locally: create a small mutation
+  request, let OPENCODE produce a mutated copy, and run `pytest` to
+  observe regressions and the repair loop outcome.
+- Expand the Methods documentation with a small example manifest and a
+  brief pointer to `opencode.json` so readers can run the same harness.
 
-Remember to include code snippets, screenshots, or diagrams where appropriate to
-make your instructions clear and easy to follow.
+Reflections: Having a file-backed OPENCODE design lowers cognitive
+overhead when debugging experiments — I can inspect mutated code,
+rerun tests, and iterate on operators with simple filesystem tools.
+
+--
+XG

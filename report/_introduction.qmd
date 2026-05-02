@@ -3,7 +3,25 @@
 LLM agents, such as coding agents, have shown great promise in various applications, but their robustness and reliability 
 remain a concern. These agents can fail in unexpected ways, which can lead to negative consequences in real-world 
 applications. Therefore, it's crucial to develop methods for evaluating the robustness of coding agents and identifying   
-their weaknesses. This project proposes a new method for evaluating the robustness of coding agents through code mutation. This method involves introducing controlled mutations to the code that the agent is working with and observing how the agent responds to these mutations. By analyzing the agent's behavior in response to these mutations, we can identify weaknesses and improve the reliability of these agents. This method can provide a systematic way to evaluate coding agents and help guide future improvements in their design.
+their weaknesses.
+
+At the core of this project is a concretely defined evaluation workflow: after a coding agent generates a baseline script, a 
+hidden system automatically creates a mutation fork of that script. One agent continues with the clean baseline, while a 
+second agent receives a mutated variant. Each agent then performs the same validation and self-debugging process. This 
+dual-track experiment measures whether an agent can detect and recover from anomalies.
+
+In the proposed workflow:
+
+- Mutations are applied one by one at graded severity levels (from major structural changes such as removed methods to 
+  micro-level edits such as dead code insertion and variable renaming).
+- Each mutation is executed in an isolated agent context, and the agent is asked to generate a repair patch if the code 
+  fails or behaves unexpectedly.
+- Final outputs from the clean and mutated branches are compared for functional equivalence and behavior consistency. 
+  Equivalent results provide evidence of robustness, while divergences identify specific failure modes.
+
+This method extends traditional code mutation with a comparative agent fork design, making robustness assessment more 
+explicit and operational in realistic agent workflows. By analyzing agent decisions in both paths, we can pinpoint the 
+threshold at which an agent loses stability and model an interpretable robustness gradient.
 
 ## Motivation
 
@@ -36,7 +54,7 @@ Could cause over-reliance on coding agents, which could lead to issues if they f
 
 There is also a potential for misuse if this method is used to intentionally create more robust malicious agents. It's important to consider ethical implications and ensure that the method is used responsibly, with appropriate safeguards in place to prevent misuse. Possibly through limiting access to the method and/or providing guidelines for responsible use.
 
-Another risk involves purposefully introducing mutations to code could lead to unintended consequences if not done carefully, such as introducing security vulnerabilities or causing the code to behave in unexpected ways. Therefore, it's important to ensure that the mutations are done in a controlled and responsible manner, with appropriate testing and safeguards in place to prevent negative consequences. 
+Another risk involves purposefully introducing mutations to code could lead to unintended consequences if not done carefully, such as introducing security vulnerabilities or causing the code to behave in unexpected ways. Therefore, it's important to ensure that the mutations are done in a controlled and responsible manner, with appropriate testing and safeguards in place to prevent negative consequences. So that the method is used in a way that minimizes risks and maximizes benefits for all who use it.
 
 The method could also have implications for the job market, as improving the robustness of coding agents could potentially lead to increased automation and job displacement in certain industries. It's important to consider these implications and work towards solutions that can help mitigate negative impacts on workers and society as a whole. 
 
