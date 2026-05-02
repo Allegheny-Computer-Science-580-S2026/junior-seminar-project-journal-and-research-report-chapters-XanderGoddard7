@@ -8,47 +8,37 @@ description: "Reflections on writing the Methodology and Results chapters"
 ![Methodology and results reflection](../thumbnail.jpg)
 
 ## Reflections on Writing Chapters 3 and 4
+Writing Chapters 3 (Methodology) and 4 (Experimental Results) required
+translating an experimental idea into an implementable harness. The
+methodology focused on engineering decisions: implementing OPENCODE as
+a local subagent (file-driven manifests), using AST-aware edits so
+mutations remain syntactically valid. Choosing
+`pytest` as the primary validator made the evaluation concrete and
+easy to automate, and `mutmut` provided optional mutation-coverage
+support.
 
-In this journal entry, reflect on your experience writing the methodology and
-results chapters of your junior seminar research report.
+Challenges: describing the toolchain concisely was surprisingly
+difficult—readers need enough detail to re-run experiments, but not so
+much that the chapter becomes an installation guide. I addressed this
+by including clear reproduction steps and a small example manifest.
 
-### Chapter 3: Methodology
+On experiments: I designed the runs to answer the three research
+questions (detection, repair, effort) and to measure metrics such as
+detection rate, repair success rate, iterations-to-repair, and
+time-to-repair. The illustrative numerical-integration workload made it
+possible to inject many deterministic mutations and observe repair
+behavior, though the workload's small size limits generalization.
 
-#### Writing Process
+Key lessons from the Results chapter:
 
-- How did you decide which implementation details to include?
-- What was challenging about describing your research methods?
-- How did you use diagrams or code snippets to enhance your explanations?
-- What technical depth was appropriate for your audience?
+- Tests drive outcomes: when unit tests fully capture intended
+	behavior, agents tend to propose focused fixes; when tests are weak,
+	agents can overfit and produce patches that pass tests but are
+	semantically incomplete.
+- Cost matters: repeated propose-apply-test cycles mean test runtime
+	dominates evaluation cost; incremental test-caching or sandboxing can
+	substantially reduce runtime for large studies.
 
-#### Content Reflections
-
-- Does your methodology chapter clearly explain your approach?
-- Did you adequately describe the infrastructure and tools you used?
-- How well did you address ethical considerations in your methods?
-- Can you draw a diagram or formally outline an algorithm from your implementation?
-- What aspects of your implementation are you most proud of? Why?
-
-### Chapter 4: Experimental Results
-
-#### Conducting and Reporting Experiments
-
-- How did you design your experiments to test your research questions?
-- What metrics did you use to evaluate your work?
-- What challenges did you face in collecting and analyzing data?
-- How did you decide which results to include in your report?
-
-#### Content Reflections
-
-- Do your results effectively demonstrate the value of your work?
-- How did you use visualizations to present your findings?
-- Did you discuss both successes and limitations of your approach?
-- What were the most interesting or unexpected results?
-- How well did you address threats to validity of the experiments?
-
-### Overall Reflections
-
-- How do these chapters demonstrate the contribution of your research?
-- What did you learn about the scientific method through this process?
-- What revisions do you plan to make based on feedback?
-- How has writing these chapters changed your perspective on your research?
+Overall, these chapters made the project concrete and taught me the
+importance of designing experiments that are both reproducible and
+cost-aware.

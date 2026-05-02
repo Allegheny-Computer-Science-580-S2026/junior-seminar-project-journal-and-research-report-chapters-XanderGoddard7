@@ -9,32 +9,41 @@ description: "Overall reflection on the research project and next steps"
 
 ## Overall Project Reflection
 
-In this final journal entry, reflect on your entire research project experience.
-In doing so, please consider the following questions:
+This project taught me both technical skills and research process
+habits. On the technical side I implemented a LLM-driven mutation
+pipeline, integrated AST-aware operators, automated test validation with
+`pytest`, and used mutation analysis tools like `mutmut`.
 
-### What did you learn?
+Research skills: I designed reproducible experiments, selected metrics
+(detection rate, repair success, iterations-to-repair, time-to-repair),
+and learned how to communicate threats to validity and ethical
+constraints.
 
-- What technical skills did you develop?
-- What research methods did you learn?
-- What did you learn about yourself as a researcher?
+Major challenges and how I addressed them:
 
-### What challenges did you face?
+- Scope vs. rigor: balancing a runnable prototype with rigorous
+	evaluation required trade-offs; I focused on a compact workload to
+	iterate quickly, while documenting limitations and future scaling
+	plans.
+- Validation limits: relying on unit tests surfaced overfitting risks;
+	I now plan to add metamorphic and specification-based checks.
 
-- What were the biggest obstacles you encountered?
-- How did you overcome these obstacles?
-- What would you do differently if you could start over?
 
-### What are you most proud of?
+Proudest accomplishments:
 
-- What accomplishments stand out?
-- What aspects of your work exceeded your expectations?
-- What contributions did your research make?
+- Delivering a complete, replayable harness (OPENCODE + driver) that others can reuse.
+- Producing an experimental write-up that ties implementation details to
+	interpretable metrics and concrete recommendations.
 
-### What are your next steps?
+Next steps:
 
-- How will you build on this research in the future?
-- What questions remain unanswered?
-- How might you apply what you learned to future projects?
+- Scale experiments to larger projects and report aggregated statistics
+	with confidence intervals.
+- Implement stronger validation checks and build a failure-mode
+	taxonomy to guide agent improvements.
+- Package the harness and documentation so other researchers can replay
+	runs and contribute operator implementations.
 
-Use this entry to synthesize your experiences and articulate the value of the
-work you have completed throughout the semester.
+These entries summarize the learning journey: concrete engineering
+progress, iterative scientific thinking, and a clear path forward for
+extending the research.

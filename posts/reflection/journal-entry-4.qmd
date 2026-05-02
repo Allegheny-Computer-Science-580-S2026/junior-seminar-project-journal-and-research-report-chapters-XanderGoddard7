@@ -8,46 +8,29 @@ description: "Reflections on writing the Introduction and Related Work chapters"
 ![Writing reflection](../thumbnail.jpg)
 
 ## Reflections on Writing Chapters 1 and 2
+In drafting Chapters 1 (Introduction) and 2 (Related Work) I focused on
+making the evaluation problem concrete and reproducible. The Introduction
+frames a dual-track, file-driven experiment (clean vs. mutated forks)
+that keeps the project grounded in a runnable artifact rather than a
+purely conceptual benchmark. That decision made it easier to describe
+exact experimental steps and to connect methods to measurable metrics.
 
-In this journal entry, reflect on your experience writing the first two chapters
-of your junior seminar research report.
+The literature review organized prior work into four practical lenses:
+LLM code generation, adversarial/robustness testing, evaluation
+frameworks/benchmarks, and program representation. This helped me
+select sources that informed design choices (e.g., mutation-testing
+methodology, automated testing tools, and robustness evaluation
+frameworks) and to clearly show where the agent-fork design fills a gap
+in existing evaluations.
 
-### Chapter 1: Introduction
+Challenges and feedback: the trickiest task was balancing background
+and specificity—readers needed enough context to appreciate mutation
+testing, but not so much detail that the introduction lost its
+contribution. Early reviewers asked for clearer statements of
+assumptions (toy workloads, test-driven validation) and for explicit
+threats to validity; I incorporated that feedback by tightening the
+scope and calling out limitations up front.
 
-#### Writing Process
-
-- How did you approach writing the introduction?
-- What was most challenging about articulating your research problem?
-- How did you determine what background information to include?
-- How did you identify and describe the key contributions of your project?
-
-#### Content Reflections
-
-- How well does your introduction motivate the research problem?
-- Are the aims and objectives of your project clearly stated?
-- Did you effectively highlight the ethical issues related to your work?
-- What feedback have you received on your introduction?
-
-### Chapter 2: Related Work
-
-#### Literature Review Process
-
-- How did you find relevant sources for your literature review?
-- What criteria did you use to select which sources to include?
-- How did you organize the related work into a coherent narrative?
-- What strategies did you use to compare and contrast different approaches?
-
-#### Content Reflections
-
-- How well does your related work chapter situate your research?
-- Did you identify gaps in existing work that your project addresses?
-- How did you connect the related work to the ethical discussions in Chapter 1?
-- What was the most interesting or surprising thing you learned from the literature?
-- What feedback have you received on your related work chapter?
-
-### Overall Reflections
-
-- How do these two chapters work together to set up your research?
-- What overall revisions do you plan to make based on feedback?
-- What did you learn about academic writing through this process?
-- How has writing these chapters deepened your understanding of your research?
+Overall, these two chapters set the experimental agenda and provide the
+literature scaffolding needed to interpret the results in a broader
+research context.
