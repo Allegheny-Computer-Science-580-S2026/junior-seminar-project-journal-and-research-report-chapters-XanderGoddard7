@@ -30,4 +30,83 @@ you do next if you had more time? What questions remain unanswered?
 Especially as pertains to the public release or use of your software or
 methods, what unresolved or special issues remain? What recommendations
 might you make? How could future work address ethical concerns raised by
-your research?
+```quarto
+# Conclusions and Future Work
+
+This project introduced a reproducible, file-driven mutation-evaluation
+harness (the Coding Agent MRT / OPENCODE subagent) and demonstrated how
+LLM-based coding agents behave when confronted with deterministic source
+code mutations. The repository implements a clear workflow for
+injecting AST-aware edits, quarantining mutated artifacts, and validating
+agent proposals using `pytest`-driven test suites. Together, the
+Methods and Experiments chapters show that the approach is practical for
+auditable, replayable evaluation and that current coding agents can
+frequently propose test-passing repairs in tightly scoped workloads.
+
+Key takeaways:
+
+- The framework: the OPENCODE file-driven approach produces detailed,
+	manifest-backed artifacts that enable exact replay of mutation runs and
+	transparent provenance for each injected edit.
+- Empirical outcome: in our illustrative numerical-integration workload
+	the evaluated agents often generated patches that restored passing
+	test behavior, but the results are strongly conditioned on the test
+	suite's expressivity and the compactness of the target program.
+- Limitations: high repair rates on a toy example do not imply
+	generalized robustness; scaling to larger codebases, complex
+	dependencies, and underspecified requirements will expose additional
+	failure modes.
+
+Interpretation relative to the research questions introduced in
+`_introduction.qmd` and analyzed in `_experiments.qmd`:
+
+- Detection (RQ1): agents reliably surface explicit failure symptoms
+	when test output or stack traces reveal the error; silent or
+	behavioral regressions remain harder to localize automatically.
+- Repair (RQ2): agents can produce patches that satisfy tests in
+	constrained contexts; passing tests should be treated as a useful but
+	incomplete signal of semantic correctness.
+- Effort (RQ3): iterations-to-repair and time-to-repair depend on the
+	agent's search strategy, mutation hardness, and test execution cost;
+	reporting distributions per-operator and per-seed is necessary for
+	fair comparisons.
+
+Recommendations and future directions:
+
+- Broaden workloads: evaluate on multiple, larger projects with richer
+	test suites and external dependencies to assess scalability.
+- Report rigorous statistics: run multiple seeds and operator mixes and
+	present aggregated metrics (means, standard errors, confidence
+	intervals) stratified by mutation class.
+- Strengthen validation: complement `pytest` with metamorphic tests,
+	specification checks, or lightweight formal analyses to reduce
+	overfitting-to-tests risks.
+- Failure-mode analysis: catalogue representative failure cases to
+	produce a taxonomy that can drive targeted agent improvements (e.g.,
+	handling API changes, control-flow flips, and off-by-one errors).
+- Tooling and automation: add lightweight sandboxing and incremental
+	test-caching to reduce evaluation cost and enable longer-running
+	comparative studies across many models.
+
+Ethical considerations and responsible release:
+
+Applying mutation-based evaluation can surface vulnerabilities and
+unexpected behaviors; experiments must therefore be restricted to
+non-production, low-risk code and accompanied by clear usage
+guidelines. Public releases of mutation artifacts or hardened agents
+should include documentation on safe use and recommendations to avoid
+misuse (for instance, by limiting distribution of high-impact mutation
+operators or by providing responsible-disclosure channels for discovered
+vulnerabilities).
+
+Closing statement
+
+The Coding Agent MRT and the OPENCODE subagent provide a concrete,
+replayable platform for studying agent robustness under controlled code
+perturbations. The initial experiments show promise and expose clear
+paths forward: scaling workloads, improving validation signals beyond
+tests, and systematically analyzing failure modes. Pursuing these
+directions will help establish rigorous benchmarks and actionable
+improvements for the next generation of coding agents.
+
+```
