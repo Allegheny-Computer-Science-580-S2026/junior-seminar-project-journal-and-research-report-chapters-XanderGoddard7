@@ -19,11 +19,12 @@ original branch. Each branch is executed in an isolated agent context; the
 agent may attempt repairs or adjustments before producing a final script
 that is compared for functional equivalence and behavior consistency.
 
-![](images/mutation_pipeline.svg){fig-alt="Mutation fork pipeline"}
+![](images/Code%20Agent%20MRT.png){fig-alt="Mutation fork pipeline"}
 
-Figure 1: LLM-Mutator mutation-fork evaluation pipeline. The pipeline
-creates a mutated fork, runs two agent workflows in parallel, and
-compares final outputs for behavioral and functional differences.
+Figure 1: Agent MRT mutation-fork pipeline. The image shows a
+mutated fork created from a baseline, two parallel agent workflows,
+and the comparison of final outputs for behavioral and functional
+differences.
 
 ## Development environment and tools
 
@@ -93,7 +94,7 @@ failure modes. Examples implemented in the Coding Agent MRT include:
 - Type or API perturbations: replace an API call with a different but
 	syntactically valid call (moderate).
 - Cosmetic/no-op mutations: rename local variables, re-order imports,
-	or insert dead code (minor) [@papadakis2019analysis].
+	or insert dead code (minor).
 
 Each mutation is applied deterministically using a scripted operator so
 that experiments are repeatable. The severity levels are designed to create a gradient of difficulty for the agent, with the expectation that more severe mutations will be harder to detect and repair.

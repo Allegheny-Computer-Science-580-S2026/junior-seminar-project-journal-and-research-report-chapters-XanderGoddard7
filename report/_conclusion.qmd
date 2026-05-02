@@ -1,112 +1,64 @@
 # Conclusions and Future Work
 
-My tool is a LLM mutation robustness evaluation framework. Subagents are an agentic tool that can be used to break down complex tasks into smaller, more manageable sub-tasks. This approach can help to improve the performance of coding agents by allowing them to focus on specific aspects of a task, rather than trying to solve the entire problem at once. This became very useful in this project as subagents allowed for the creation of a mutation-based evaluation framework that could systematically assess the robustness of coding agents in dynamic coding sessions. By leveraging subagents, I was able to design a framework that could generate and apply code mutations without the main agent being aware, which enhanced the evaluation process.
-
-Unfortunately, due to the how LLM agents work and the fact that they are not deterministic, I was not able to get the results I wanted in terms of testing the robustness of coding agents. However, I was able to create a framework that could be used for this purpose and I believe that with further development and refinement, it could be a valuable tool for evaluating coding agent robustness in the future.
-
-My tool showed potential for evaluating the robustness of coding agents, but it also highlighted the challenges associated with testing non-deterministic systems. The results suggest that while the framework is a step in the right direction, there is still much work to be done to improve its effectiveness and reliability. This gives way to a number of future work opportunities, including refining the mutation generation process, improving the evaluation metrics, and exploring ways to handle the non-deterministic nature of LLM agents more effectively. Additionally, further research could investigate how different types of mutations impact coding agent performance and robustness, providing deeper insights into the vulnerabilities and strengths of these systems. Overall, while the project did not yield the desired results in terms of robustness evaluation, it laid the groundwork for future research and development in this area, and highlighted important considerations for evaluating coding agents in dynamic and non-deterministic environments. With what I've currently achieved  and my future work, this framework has the potential to become a valuable tool for researchers and practitioners in the field of coding agent evaluation that could lead to more robust and reliable coding agents in the future.
-
-Traditionally, this chapter addresses the areas proposed below as
-sections, although not necessarily in this order or organized as offered.
-However, the last section -- "Ethical Implications" is required for this
-chapter. See the heading below for more details.
-
-**Note for Junior Seminar**: This chapter should be approximately 5-7
-pages in length. Summarize what you accomplished, reflect on what you
-learned, and discuss how this work could be extended in the future.
-
-## Summary of Results
-
-Summarize the key findings and contributions of your research. What did
-you accomplish? What were the main outcomes of your project?
-
-## Future Work
-
-Describe potential extensions or improvements to your work. What would
-you do next if you had more time? What questions remain unanswered?
-
-## Future Ethical Implications and Recommendations
-
-Especially as pertains to the public release or use of your software or
-methods, what unresolved or special issues remain? What recommendations
-might you make? How could future work address ethical concerns raised by
-```quarto
-# Conclusions and Future Work
-
-This project introduced a reproducible, file-driven mutation-evaluation
-harness (the Coding Agent MRT / OPENCODE subagent) and demonstrated how
-LLM-based coding agents behave when confronted with deterministic source
-code mutations. The repository implements a clear workflow for
+This work developed a reproducible, file-driven mutation-evaluation
+harness (the Coding Agent MRT / OPENCODE subagent) and used it to
+investigate how LLM-based coding agents detect and repair deterministic
+source-code mutations. The repository provides an auditable pipeline for
 injecting AST-aware edits, quarantining mutated artifacts, and validating
-agent proposals using `pytest`-driven test suites. Together, the
-Methods and Experiments chapters show that the approach is practical for
-auditable, replayable evaluation and that current coding agents can
-frequently propose test-passing repairs in tightly scoped workloads.
+agent proposals via `pytest`-driven test suites. The Methods and
+Experiments chapters together show the approach is practical for
+replayable evaluation and useful for generating hypotheses about agent
+behavior under perturbation.
 
-Key takeaways:
+## Summary of findings
 
-- The framework: the OPENCODE file-driven approach produces detailed,
-	manifest-backed artifacts that enable exact replay of mutation runs and
-	transparent provenance for each injected edit.
-- Empirical outcome: in our illustrative numerical-integration workload
-	the evaluated agents often generated patches that restored passing
-	test behavior, but the results are strongly conditioned on the test
-	suite's expressivity and the compactness of the target program.
-- Limitations: high repair rates on a toy example do not imply
-	generalized robustness; scaling to larger codebases, complex
-	dependencies, and underspecified requirements will expose additional
-	failure modes.
+- The OPENCODE harness produces manifest-backed artifacts that enable
+  exact replay and provenance for mutation runs.
+- In a compact numerical-integration workload, evaluated agents often
+  proposed patches that restored passing tests; this demonstrates the
+  potential for automated repair in constrained settings.
+- High repair rates on small, well-tested examples do not imply
+  generalized robustness: scaling to larger projects, richer
+  dependencies, and weaker tests will reveal further failure modes.
 
-Interpretation relative to the research questions introduced in
-`_introduction.qmd` and analyzed in `_experiments.qmd`:
+## Interpretation vs. research questions
 
-- Detection (RQ1): agents reliably surface explicit failure symptoms
-	when test output or stack traces reveal the error; silent or
-	behavioral regressions remain harder to localize automatically.
-- Repair (RQ2): agents can produce patches that satisfy tests in
-	constrained contexts; passing tests should be treated as a useful but
-	incomplete signal of semantic correctness.
-- Effort (RQ3): iterations-to-repair and time-to-repair depend on the
-	agent's search strategy, mutation hardness, and test execution cost;
-	reporting distributions per-operator and per-seed is necessary for
-	fair comparisons.
+- Detection (RQ1): agents reliably report explicit failure symptoms when
+  failures are visible in test output or tracebacks; indirect or silent
+  regressions are harder to localize.
+- Repair (RQ2): agents can produce test-passing patches in constrained
+  environments, but passing tests are an incomplete proxy for semantic
+  correctness.
+- Effort (RQ3): iterations-to-repair and wallclock time depend on
+  mutation difficulty, agent strategy, and test execution cost; reports
+  should include distributions and per-operator breakdowns.
 
-Recommendations and future directions:
+## Recommendations and future work
 
-- Broaden workloads: evaluate on multiple, larger projects with richer
-	test suites and external dependencies to assess scalability.
-- Report rigorous statistics: run multiple seeds and operator mixes and
-	present aggregated metrics (means, standard errors, confidence
-	intervals) stratified by mutation class.
-- Strengthen validation: complement `pytest` with metamorphic tests,
-	specification checks, or lightweight formal analyses to reduce
-	overfitting-to-tests risks.
-- Failure-mode analysis: catalogue representative failure cases to
-	produce a taxonomy that can drive targeted agent improvements (e.g.,
-	handling API changes, control-flow flips, and off-by-one errors).
-- Tooling and automation: add lightweight sandboxing and incremental
-	test-caching to reduce evaluation cost and enable longer-running
-	comparative studies across many models.
+- Scale workloads: run the harness on multiple, larger codebases with
+  diverse operator mixes and realistic dependencies.
+- Improve reporting: run multiple seeds and report aggregated metrics
+  (means, variances, confidence intervals) stratified by mutation class.
+- Strengthen validation: complement unit tests with metamorphic checks,
+  specification-based tests, or lightweight formal verification where
+  feasible to reduce overfitting-to-tests.
+- Analyze failures: produce a taxonomy of common agent mistakes to
+  guide targeted improvements (e.g., API misuse, control-flow flips,
+  and off-by-one errors).
+- Reduce evaluation cost: add sandboxing and incremental test-caching to
+  enable broader comparative studies across many agents.
 
-Ethical considerations and responsible release:
+## Ethical considerations
 
-Applying mutation-based evaluation can surface vulnerabilities and
-unexpected behaviors; experiments must therefore be restricted to
-non-production, low-risk code and accompanied by clear usage
-guidelines. Public releases of mutation artifacts or hardened agents
-should include documentation on safe use and recommendations to avoid
-misuse (for instance, by limiting distribution of high-impact mutation
-operators or by providing responsible-disclosure channels for discovered
-vulnerabilities).
+Mutation-based evaluation can surface vulnerabilities and unexpected
+behaviors. Keep experiments limited to non-production code, accompany
+public artifacts with clear usage guidelines, and provide responsible
+disclosure channels for any security issues discovered.
 
-Closing statement
+## Closing remarks
 
-The Coding Agent MRT and the OPENCODE subagent provide a concrete,
-replayable platform for studying agent robustness under controlled code
-perturbations. The initial experiments show promise and expose clear
-paths forward: scaling workloads, improving validation signals beyond
-tests, and systematically analyzing failure modes. Pursuing these
-directions will help establish rigorous benchmarks and actionable
-improvements for the next generation of coding agents.
-
-```
+The Coding Agent MRT establishes a practical, replayable platform for
+studying agent robustness to code perturbations. The initial results are
+promising and identify concrete next steps to move from illustrative
+case studies toward rigorous, generalizable benchmarks for automated
+repair and robustness in coding agents.
