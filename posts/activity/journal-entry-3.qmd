@@ -7,6 +7,8 @@ description: "Experiences with brainstorming, prototyping, and presenting"
 
 ![Brainstorming and prototyping](../thumbnail.jpg)
 
+
+
 ## Brainstorming and Prototyping Experience
 
 In this journal entry, reflect on your experiences with brainstorming your idea,

@@ -1,16 +1,31 @@
-# Related work
+# Related Work
 
-This chapter includes a broad and detailed review of relevant existing
-work. The literature review should provide background and context for
-your junior seminar research project. The subsections may be organized
-in whatever manner seems best suited to the material-- chronological, or
-by topic, or according to some other criteria (e.g., primary versus
-secondary resources).
+This chapter provides a comprehensive review of the existing literature on large language model (LLM)-based code generation, robustness evaluation in machine learning, adversarial testing techniques, and mutation testing in software engineering. The review identifies key advancements and gaps in evaluating the robustness of coding agents, particularly through code mutations. The discussion incorporates 12 seminal works that inform the development of a mutation-based framework for reducing coding agent errors.
 
-**Note for Junior Seminar**: This chapter should be approximately 5-7
-pages in length. Aim for 10-15 high-quality sources that directly relate
-to your project. Focus on synthesizing the literature to show how your
-work fits into the existing research landscape.
+## Foundations of LLM Code Generation
 
-If ethical issues are central to this work, you should also address
-historical and contemporary issues or efforts made to address them.
+Large language models have revolutionized code generation and understanding tasks. CodeXGLUE, a benchmark dataset for code understanding and generation, establishes standardized evaluation metrics for machine learning models on code-related tasks [@lu2021codexglue]. CodeBERT, a pre-trained model for programming languages, learns distributed representations of code to enhance tasks like code search and summarization [@feng2020codebert]. Wong et al. provide a theoretical and empirical analysis of test suite reduction in mutation testing, demonstrating how efficient test selection can improve mutation analysis effectiveness [@wong1998theoretical].
+
+## Robustness and Adversarial Testing
+
+Robustness evaluation is crucial for deploying ML systems in real-world applications. Debroy and Wong demonstrate how mutation testing can be used to automatically suggest fixes for faulty programs, bridging the gap between fault detection and correction [@debroy2010using]. Carlini and Wagner provide a comprehensive framework for evaluating neural network robustness, developing powerful attack methods that expose weaknesses in deep learning models [@carlini2017towards]. DeepXplore introduces automated whitebox testing for deep learning systems, using neuron coverage metrics to generate test inputs that uncover hidden faults [@pei2017deepxplore].
+
+## Evaluation Frameworks and Benchmarks
+
+Unified evaluation landscapes are essential for comparing robustness across different NLP and ML systems. Holistic Evaluation of Language Models (HELM) provides a comprehensive framework for evaluating language models across multiple dimensions, including robustness and fairness [@liang2022helm]. Robustness Gym offers tools for stress-testing models under various conditions, unifying the NLP evaluation landscape [@goel2021robustness]. Certified robustness approaches provide formal guarantees against adversarial examples, ensuring verifiable security properties [@carlini2016robustness].
+
+## Adversarial Robustness and Features
+
+Adversarial examples are not merely bugs but fundamental features of neural networks, as demonstrated by Ilyas et al., who show that adversarial perturbations exploit inherent model behaviors rather than random errors [@ilyas2019adversarial].
+
+## Code Representation and Analysis
+
+Learning distributed representations of code enables advanced program analysis. code2vec decomposes code into paths in its abstract syntax tree to create continuous vector representations, facilitating tasks like method name prediction and semantic similarity [@alon2019code2vec].
+
+## Automated Testing for Complex Systems
+
+DeepTest automates testing of deep-neural-network-driven autonomous systems, generating diverse test cases to evaluate system reliability under various conditions [@tian2018deeptest].
+
+## Synthesis and Research Gap
+
+The reviewed literature establishes a solid foundation in LLM code generation, adversarial robustness, and automated testing. However, a significant gap exists in applying mutation testing principles specifically to LLM-based coding agents. Current evaluation frameworks focus on static benchmarks or general adversarial robustness, but lack integrated approaches that combine code mutation with iterative agent behavior. The present work addresses this gap by developing a mutation-based evaluation framework tailored for coding agents, enabling systematic assessment of robustness in dynamic coding sessions. This approach builds on the 12 referenced works to advance the state-of-the-art in coding agent reliability.
