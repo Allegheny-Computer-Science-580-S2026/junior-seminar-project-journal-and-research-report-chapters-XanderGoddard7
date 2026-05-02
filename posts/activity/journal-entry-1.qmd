@@ -5,20 +5,13 @@ categories: [research-idea, planning]
 description: "What is your research idea?"
 ---
 
-![Research planning](../thumbnail.jpg)
+![Research planning](../AI_Error.jpeg)
 
 ## What is your research idea?
 
-In this first journal entry, describe the problem you plan to investigate and
-your initial approach. Please answer the following questions:
+Creating a new method of verifying coding agent robustness through using code mutation. The concept is to make it so that after a coding agent creates a python script I have a program secretly mutate said script and create a fork with one coding agent having the mutated script and the other having the non-mutated script. Then the coding agents will test each script to see if they work correctly. If the coding agent with the mutations notices that its script isn’t behaving it should update it to then work correctly. When each of the coding agents are done and have produced a final output it will then compare outputs if they are equivalent then we know that the coding agent is robust enough to handle these types of errors. In the case that they are not equivalent or are unable to be determined as equivalent then we have faced a situation where the coding agent might not be robust enough to handle this kind of error.
 
-- What is the main problem or question you want to address?
-- Why is this problem important or interesting?
-- What is your initial approach to solving this problem?
-- What tools, technologies, or methods do you plan to use?
-- What do you hope to achieve or discover?
-- What is one published research paper in your area?
+The types of errors will have levels associated with them in terms of how much they affect the code with the earliest being a very large change like taking out a whole method function and going down in scale to the most minute of changes. The coding agent will be given these errors one at a time starting at the highest level going down to the lowest level with the idea that the coding agent will be unable to handle a change at one level and therefore not be able to handle a change at lower levels thus giving a gradient of robustness for any tested coding agents.
 
-Remember to be specific and provide concrete examples where possible. This entry
-will serve as a foundation for your research project, so take time to think
-through your ideas carefully and to document this in this journal entry.
+
+A paper related to LLM agents failing is Kunlun Zhu, et al. "Where LLM Agents Fail and How They Can Learn From Failures." (2025) https://arxiv.org/pdf/2509.25370

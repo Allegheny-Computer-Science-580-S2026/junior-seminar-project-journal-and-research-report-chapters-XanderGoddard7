@@ -9,52 +9,30 @@ description: "Reflection on writing the Conclusions and Future Work chapter"
 
 ## Reflection on Writing Chapter 5: Conclusions and Future Work
 
-In this journal entry, reflect on your experience writing the final chapter of
-your junior seminar research report.
+Writing the Conclusions chapter pushed me to summarize outcomes,
+acknowledge limitations, and articulate concrete next steps. I emphasized
+that the Coding Agent MRT provides a reproducible pipeline and clear
+provenance for mutation experiments, while also being explicit about the
+work's current scope (toy workloads, test-driven validation).
 
-### Writing the Conclusions
+Key reflections:
 
-#### Summarizing Your Research
+- Summarizing outcomes: I framed the work as an experimental platform
+	for studying agent robustness, highlighting the OPENCODE manifest
+	artifacts, the quarantine strategy, and the pytest-driven validation
+	loop as primary contributions.
+- Assessing success: the experiments produced encouraging,
+	illustrative results (agents often proposing test-passing repairs) but
+	also exposed the limits of test-only validation and the need for more
+	varied workloads.
+- Future work selection: proposed directions (scaling workloads,
+	aggregated statistics, stronger validation, failure-mode analysis) are
+	directly motivated by observed limitations in the experiments.
 
-- How did you approach summarizing your research outcomes?
-- What were the key takeaways you wanted readers to understand?
-- How did you connect your conclusions back to your original research questions?
-- What was challenging about synthesizing all your work into a cohesive conclusion?
+Ethical notes: mutation-driven research can reveal vulnerabilities; my
+conclusion recommends restricting experiments to non-production code,
+documenting safe use, and establishing responsible-disclosure channels
+for risky findings.
 
-#### Reflecting on Results
-
-- How well did your research meet your initial objectives?
-- What unexpected outcomes or insights emerged from this project?
-- How did you address limitations or shortcomings in your work?
-- What did you learn about your research topic through this process?
-
-### Proposing Future Work
-
-#### Identifying Next Steps
-
-- How did you identify areas for future research?
-- What limitations of your current work suggest future directions?
-- What new questions emerged from your research?
-- How realistic and specific are your proposed future work items?
-
-#### Ethical Considerations
-
-- Did you address any unresolved ethical issues?
-- What new ethical concerns might future work introduce?
-- How might future research mitigate current limitations?
-
-### Overall Reflections
-
-- How does this chapter provide closure for your research report?
-- What did you learn about the iterative nature of research?
-- How has writing this chapter affected your perspective on your project?
-- What are you most satisfied with in this final chapter?
-- If you could revise anything in this chapter, what would it be?
-
-### Looking Forward
-
-- How might you actually pursue some of the future work you proposed?
-- What skills or knowledge would you need to develop?
-- How has this research project prepared you for future research endeavors?
-- What are the next steps you should take as your prepare for your senior project?
-- What advice would you give to the next group of students in the junior seminar course?
+Overall, writing this chapter turned experimental observations into a
+coherent research narrative and a practical roadmap for next steps.

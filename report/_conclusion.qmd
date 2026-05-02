@@ -1,27 +1,64 @@
 # Conclusions and Future Work
 
-Traditionally, this chapter addresses the areas proposed below as
-sections, although not necessarily in this order or organized as offered.
-However, the last section -- "Ethical Implications" is required for this
-chapter. See the heading below for more details.
+This work developed a reproducible, file-driven mutation-evaluation
+harness (the Coding Agent MRT / OPENCODE subagent) and used it to
+investigate how LLM-based coding agents detect and repair deterministic
+source-code mutations. The repository provides an auditable pipeline for
+injecting AST-aware edits, quarantining mutated artifacts, and validating
+agent proposals via `pytest`-driven test suites. The Methods and
+Experiments chapters together show the approach is practical for
+replayable evaluation and useful for generating hypotheses about agent
+behavior under perturbation.
 
-**Note for Junior Seminar**: This chapter should be approximately 5-7
-pages in length. Summarize what you accomplished, reflect on what you
-learned, and discuss how this work could be extended in the future.
+## Summary of findings
 
-## Summary of Results
+- The OPENCODE harness produces manifest-backed artifacts that enable
+  exact replay and provenance for mutation runs.
+- In a compact numerical-integration workload, evaluated agents often
+  proposed patches that restored passing tests; this demonstrates the
+  potential for automated repair in constrained settings.
+- High repair rates on small, well-tested examples do not imply
+  generalized robustness: scaling to larger projects, richer
+  dependencies, and weaker tests will reveal further failure modes.
 
-Summarize the key findings and contributions of your research. What did
-you accomplish? What were the main outcomes of your project?
+## Interpretation vs. research questions
 
-## Future Work
+- Detection (RQ1): agents reliably report explicit failure symptoms when
+  failures are visible in test output or tracebacks; indirect or silent
+  regressions are harder to localize.
+- Repair (RQ2): agents can produce test-passing patches in constrained
+  environments, but passing tests are an incomplete proxy for semantic
+  correctness.
+- Effort (RQ3): iterations-to-repair and wallclock time depend on
+  mutation difficulty, agent strategy, and test execution cost; reports
+  should include distributions and per-operator breakdowns.
 
-Describe potential extensions or improvements to your work. What would
-you do next if you had more time? What questions remain unanswered?
+## Recommendations and future work
 
-## Future Ethical Implications and Recommendations
+- Scale workloads: run the harness on multiple, larger codebases with
+  diverse operator mixes and realistic dependencies.
+- Improve reporting: run multiple seeds and report aggregated metrics
+  (means, variances, confidence intervals) stratified by mutation class.
+- Strengthen validation: complement unit tests with metamorphic checks,
+  specification-based tests, or lightweight formal verification where
+  feasible to reduce overfitting-to-tests.
+- Analyze failures: produce a taxonomy of common agent mistakes to
+  guide targeted improvements (e.g., API misuse, control-flow flips,
+  and off-by-one errors).
+- Reduce evaluation cost: add sandboxing and incremental test-caching to
+  enable broader comparative studies across many agents.
 
-Especially as pertains to the public release or use of your software or
-methods, what unresolved or special issues remain? What recommendations
-might you make? How could future work address ethical concerns raised by
-your research?
+## Ethical considerations
+
+Mutation-based evaluation can surface vulnerabilities and unexpected
+behaviors. Keep experiments limited to non-production code, accompany
+public artifacts with clear usage guidelines, and provide responsible
+disclosure channels for any security issues discovered.
+
+## Closing remarks
+
+The Coding Agent MRT establishes a practical, replayable platform for
+studying agent robustness to code perturbations. The initial results are
+promising and identify concrete next steps to move from illustrative
+case studies toward rigorous, generalizable benchmarks for automated
+repair and robustness in coding agents.
