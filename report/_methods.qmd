@@ -2,8 +2,8 @@
 
 ## Overview
 
-This project implements an LLM-centered mutation evaluation harness (the
-"LLM-Mutator") that measures how coding agents respond to graded source
+This project implements a Coding Agent-centered mutation evaluation harness (the
+"Coding Agent MRT") that measures how coding agents respond to graded source
 code mutations. The core idea is simple: produce a clean baseline script,
 create one or more mutated forks of that script, and run parallel agent
 workflows to measure whether the agents detect, repair, or otherwise
@@ -75,12 +75,10 @@ The experimental flow is therefore:
 3. The harness runs `pytest` against the mutated copy to determine
 	regressions. Optionally `mutmut` is used for fine-grained mutation
 	coverage analysis and to cache mutation artifacts in `.mutmut-cache`.
-4. Two agent contexts are created for evaluation: a clean-control agent
-	and a repair agent instantiated from the `AGENTS.md` / agent factory.
-	The repair agent receives the mutated copy and attempts iterative
-	repairs; each candidate patch is validated by re-running the test
-	suite in the quarantined environment.
-
+4. Two agent contexts are created for evaluation: one for the clean script and one for the mutated script. Each agent runs in isolation, with the mutated agent unaware of the mutation.
+5. The agents execute their respective scripts, and the outputs are collected.
+6. The Comparator and Metrics Collector component evaluates the outputs for functional equivalence, using the defined metrics (detection rate, time-to-repair, etc.) to quantify robustness
+	
 This file-based, CLI-driven approach matches the repository structure in
 the attached `Coding Agent MRT` folder and ensures reproducible runs by
 preserving manifests and mutated artifacts under `.opencode/agents/`.
