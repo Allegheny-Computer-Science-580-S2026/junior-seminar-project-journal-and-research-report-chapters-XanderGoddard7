@@ -1,4 +1,61 @@
 ---
+title: "Journal Entry 3 — Iterations, surprises, and lessons"
+date: 2026-05-01
+categories: [activity, reflection]
+---
+
+Working on the Coding Agent MRT felt harder than I originally expected.
+The central idea—treating controlled, auditable code mutation as a
+first-class primitive for evaluating coding agents—was new and in many
+ways counterintuitive. Rather than testing models with curated prompts
+or adversarial inputs, we intentionally introduced deterministic faults
+into small, well-specified programs and observed how agents detect and
+repair them. That inversion (break first, then watch the agent try to
+fix) required rethinking how to measure "robustness" and how to build a
+reproducible harness.
+
+Key difficulties and how we iterated through them:
+
+- Design friction: early prototypes mutated files in-place and relied on
+  ad-hoc scripts. That produced non-replayable runs and confusing
+  provenance. Moving mutations into a file-backed OPENCODE subagent with
+  per-run manifests under `.opencode/opencode.json` fixed reproducibility and
+  made debugging tractable.
+- Testing coupling: we learned the hard way that repair success is tightly
+  coupled to test quality. Weak tests allow trivial patches that pass
+  but don't restore semantics; stronger assertions made failure modes
+  visible and produced more meaningful repair traces.
+- Agent interaction patterns: some proposals from agents were brittle or
+  repeatedly off-target. We added a quarantined propose-apply-test loop
+  that applies candidates only in isolated copies and re-runs `pytest`.
+  That reduced noise and prevented irreversible edits.
+- Tooling & ergonomics: integrating `mutmut` and caching mutation
+  artifacts under `.mutmut-cache` sped up iteration and made it easier
+  to re-run targeted operator mixes without regenerating artifacts.
+
+The project required many small, focused iterations. Each change—move to
+filesystem manifests, isolate mutated copies, improve tests, or add
+instrumentation to `AGENTS.md`—made subsequent experiments clearer and
+more reliable. The work was repeatedly counterintuitive at first, but
+that friction was productive: forcing reproducibility and provenance
+yielded a framework that is easier to reason about and share.
+
+Final reflections:
+
+- Novel ideas are often messy at the start. Keeping runs auditable and
+  manifest-backed transformed a confusing early prototype into a
+  repeatable evaluation harness.
+- Small toy programs (like `src/numerical_integration_orig.py`) are
+  valuable for surfacing concrete failure modes quickly; however, they
+  also remind us that broader claims require more diverse workloads and
+  better test suites.
+
+Next: I'd like to run a short, documented experiment from the repo root
+so the entire flow (manifest → OPENCODE → `.opencode/agents/` →
+`pytest` → repair loop) is captured and reproducible for reviewers.
+
+— XG
+---
 title: "Journal Entry 3: Brainstorming and Prototyping Experience"
 date: "2026-02-15"
 categories: [brainstorming, prototyping, presentation]

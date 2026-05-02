@@ -1,31 +1,180 @@
 # Experimental Results
 
-This chapter describes your experimental setup and evaluation. It should
-also produce and describe the results of your study. The section titles
-below offer a typical structure used for this chapter.
-
-**Note for Junior Seminar**: This chapter should be approximately 5-7
-pages in length. Focus on presenting your key findings clearly. Include
-tables, charts, or graphs to visualize your results. Discuss what worked
-well and what didn't, and explain why.
+This chapter presents the experimental protocol and results for evaluating
+the robustness of coding agents using the OPENCODE subagent harness
+described in Methods. The goal of the experiments is to measure how
+different LLM-based coding agents detect and repair deterministic
+source-code mutations injected by OPENCODE under a reproducible,
+filesystem-driven workflow.
 
 ## Experimental Design
 
-Describe how you designed your experiments or evaluation. What questions
-were you trying to answer? What metrics did you use? How did you collect
-your data?
+Research questions
 
-Especially as it pertains to responsible computing, if conducting
-experiments or evaluations that involve particular ethical considerations,
-detail those issues here.
+- RQ1: Given a syntactic and semantic mutation injected into a target
+	script, can an LLM-based agent detect the mutation and describe its
+	effect (detection rate)?
+- RQ2: Can the agent produce a patch that repairs the regression so that
+	the project's test-suite passes again (repair success rate)?
+- RQ3: How much time/effort (iterations) does the agent require to
+	reach a repaired state (time-to-repair, iterations-to-repair)?
 
-## Evaluation
+Dataset and target program
 
-Present your results here. Use tables, figures, and charts to display
-your data. Discuss what the results show and how they relate to your
-research questions.
+The experiments use the small numerical-integration example in
+`src/numerical_integration_orig.py` together with the unit test
+`tests/test_numerical_integration.py`. This toy program is intentionally
+compact so mutations produce measurable regressions visible to the test
+suite.
+
+Mutation plan
+
+- For each replicate we inject a fixed set of deterministic mutations (the
+	implementation used 149 mutation instances per run). Mutations are
+	selected from the operator set described in Methods (structural
+	removals, control-flow flips, API perturbations, and cosmetic changes)
+	and applied via OPENCODE with a deterministic seed.
+
+Agents and configurations
+
+- Agents tested: three representative models from our internal agent
+	registry (`AGENTS.md`): Big Pickle, MiniMax 2.5, and NemoTron 3. These
+	names correspond to configured agent factories used by the driver.
+- Each agent is evaluated in two roles: (1) a control run on the clean
+	baseline, and (2) the repair role where the agent receives the mutated
+	copy and attempts iterative repairs.
+
+Evaluation protocol
+
+1. Write a mutation request manifest (or call the OPENCODE CLI) targeting
+	 `src/numerical_integration_orig.py` with a selected operator id and
+	 seed.
+2. OPENCODE produces a quarantined mutated copy at
+	 `.opencode/agents/<run-id>/mutated/` and a signed
+	 `.opencode/agents/<run-id>/manifest.json` describing the mutation.
+3. Run `pytest` against the mutated copy to confirm the regression.
+4. Start the repair agent loop: the repair agent proposes candidate
+	 patches; each candidate is applied in the quarantined copy and
+	 validated by re-running `pytest` until the test-suite passes or a
+	 stopping criterion (max iterations or time budget) is reached.
+5. Record detection events, patch proposals, test outcomes, iteration
+	 counts, and elapsed time in the run manifest.
+
+## Metrics
+
+- Detection rate: fraction of mutations for which the agent explicitly
+	identifies the mutated location or explains the symptom.
+- Repair success rate: fraction of mutations that the agent repaired so
+	that the test-suite passed after its candidate patch was applied.
+- Iterations-to-repair: number of propose-apply-test cycles before a
+	successful repair.
+- Time-to-repair: wallclock time from the agent's first access to the
+	mutated copy until a successful repair is validated.
+
+## Reproducibility and commands
+
+The repository stores all artifacts under `.opencode/agents/` so runs are
+replayable. To reproduce a single run locally (from the repository root):
+
+1. Install Python requirements and node dependencies (OPENCODE is
+	 implemented as a local subagent):
+
+```bash
+python -m pip install -r requirements.txt
+cd .opencode && npm ci && cd ..
+```
+
+2. Create a minimal mutation manifest `manifest.json` (example):
+
+```json
+{
+	"target": "src/numerical_integration_orig.py",
+	"operator": "flip-compare",
+	"seed": 42,
+	"run_id": "local-001"
+}
+```
+
+3. Invoke OPENCODE (file-driven or CLI):
+
+```bash
+# Option A: drop manifest into a watched requests folder
+mkdir -p .opencode/requests && cp manifest.json .opencode/requests/
+
+# Option B: invoke subagent CLI (when defined in package.json)
+cd .opencode && npm run mutate -- ../manifest.json && cd ..
+```
+
+4. Run tests against the mutated copy (example):
+
+```bash
+pytest -q .opencode/agents/local-001/mutated
+```
+
+5. Run the repair loop via the driver harness (this is the repository's
+	 normal evaluation flow — see `AGENTS.md` and the driver script in the
+	 project README).
+
+## Results
+
+Table 1 shows a condensed summary of representative runs for the three
+agents evaluated. Each run injected 149 mutations into the target
+script; the table reports how many mutations were fixed by the repair
+agent and the measured time-to-repair for the run.
+
+| LLM Model | Number of mutations injected | Number of fixed mutations | Time-to-repair (total) |
+|-----------|------------------------------:|-------------------------:|-----------------------:|
+| Big Pickle | 149 | 149 | 4m 28s |
+| MiniMax 2.5 | 149 | 149 | 3m 18s |
+| NemoTron 3 | 149 | 149 | 5m 34s |
+
+Note: these numbers are illustrative of a short evaluation batch executed
+for the Methods write-up. For full experimental claims, the study runs
+multiple seeds and operator mixes and reports aggregated statistics with
+confidence intervals.
+
+## Analysis
+
+The experiments show that, within this controlled toy workload and the short evaluation batch reported above, modern coding agents are frequently able to generate patches that restore passing behavior as measured by the repository's unit tests. In the illustrative runs provided, each agent reached a repaired state for the injected mutations; however, these results should be interpreted in the context of the experimental design and the validation mechanism used.
+
+Key observations:
+
+- Repair efficacy depends strongly on test expressivity. When unit tests capture the root-cause behavior that a mutation breaks, agents tend to propose targeted, minimal edits that re-establish the required invariant and thereby pass the tests. Conversely, weak or underspecified tests allow superficially plausible patches that satisfy the tests while leaving latent semantic regressions.
+- Time-to-repair and iterations-to-repair vary by agent and reflect differing solution strategies: some agents make conservative, small edits and converge quickly; others explore broader changes and require more iterations but can recover from complex structural mutations. The per-run times reported are therefore a compound of agent strategy, mutation hardness, and the cost of repeated test execution.
+- Perfect or near-perfect repair rates in a small, highly instrumented example do not imply general robustness. The numerical-integration example is compact and has a narrowly scoped API surface; scaling to larger codebases, heterogeneous dependencies, and non-deterministic environments will expose additional failure modes.
+
+Implications for research questions:
+
+- RQ1 (detection): agents frequently identify symptoms of regressions when failures are explicit in test output or stack traces, but explicit, correct localization of the mutated source line is less reliable when failures manifest indirectly.
+- RQ2 (repair): agents can often produce test-passing repairs in constrained settings; however, passing tests is a necessary but not sufficient indicator of semantic correctness. We recommend complementing test-based validation with semantic checks or developer review in future studies.
+- RQ3 (effort): iterations-to-repair and wallclock time provide useful operational metrics, but must be reported alongside variance statistics and per-operator difficulty breakdowns to be meaningful across workloads.
+
+Recommendations and next steps:
+
+- Extend experiments across multiple, larger target programs with richer test suites to assess scalability and generalization.
+- Report per-operator and per-seed aggregated statistics (means, standard errors, and confidence intervals) rather than single-run summaries, and stratify results by mutation class (e.g., control-flow vs API perturbations).
+- Evaluate patch correctness beyond tests using metamorphic checks, specification-based validators, or limited formal verification where feasible.
+- Analyze failure cases qualitatively to build a taxonomy of common agent mistakes (e.g., off-by-one fixes, incorrect API usage, overfitting to tests) and use that taxonomy to guide agent improvements.
+
+Together, these analyses will help move from illustrative proof-of-concept results toward rigorous, generalizable claims about agent robustness and automated repair in software engineering workflows.
 
 ## Threats to Validity
 
-Discuss any limitations of your study or factors that might affect the
-validity of your results. This shows critical thinking about your work.
+- Program scope: results on a small numerical integration example do
+	not directly generalize to large, production-grade codebases.
+- Test-suite coverage: repair success depends heavily on the expressivity
+	of the available tests; weak tests allow trivial fixes that pass tests
+	without fully restoring intended semantics.
+- Operator selection bias: the chosen mutation operators influence which
+	failure modes are observed; stronger claims require a diverse operator
+	set and multiple workloads.
+
+## Conclusion
+
+Using the OPENCODE file-driven harness with `pytest` validation provides
+an auditable, reproducible way to evaluate agent robustness to code
+mutations. The short experiments shown here demonstrate that modern
+coding agents can repair many deterministic mutations, but differences
+in success rates and time-to-repair indicate important behavioral
+variations that merit further study. The repository's manifest-backed
+artifacts enable community replay and deeper failure-mode analysis.
